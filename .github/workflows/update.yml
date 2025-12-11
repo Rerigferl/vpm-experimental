@@ -24,11 +24,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Create output directory with write permissions
-        run: mkdir -p website && chmod 777 website
-      - uses: "docker://ghcr.io/rerigferl/vpm-repository-builder:v2.0.0"
-        with:
-          args: "source.txt ${{ github.token }} repository.json"
+      - name: Run VPM Repository Builder
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/github/workspace" \
+            -w "/github/workspace" \
+            --user root \
+            ghcr.io/rerigferl/vpm-repository-builder:v2.0.0 \
+            source.txt ${{ github.token }} repository.json
       - uses: actions/configure-pages@v5.0.0
       - uses: actions/upload-pages-artifact@v3.0.1
         with:
