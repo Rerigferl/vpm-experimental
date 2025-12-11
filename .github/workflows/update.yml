@@ -28,7 +28,7 @@ jobs:
         run: mkdir -p website && chmod 777 website
       - uses: "docker://ghcr.io/rerigferl/vpm-repository-builder:v2.0.0"
         with:
-          args: "source.txt ${{ github.token }} -s repository.json"
+          args: "source.txt ${{ github.token }} repository.json"
       - uses: actions/configure-pages@v5.0.0
       - uses: actions/upload-pages-artifact@v3.0.1
         with:
