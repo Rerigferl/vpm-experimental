@@ -1,0 +1,37 @@
+name: "Update repository packages"
+
+on: 
+  repository_dispatch:
+    types: [build-listing]
+  workflow_dispatch:
+  push:
+    branches: main
+    paths: source.txt
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: "docker://ghcr.io/rerigferl/vpm-repository-builder:v2.0.0"
+        with:
+          args: "source.txt ${{ github.token }} repository.json"
+      - run: |
+          mkdir website
+          mv vpm.json website/index.json
+      - uses: actions/configure-pages@v5.0.0
+      - uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          path: website/
+      - uses: actions/deploy-pages@v4.0.5
