@@ -10,7 +10,7 @@ on:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -24,12 +24,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: |
+          mkdir website
       - uses: "docker://ghcr.io/rerigferl/vpm-repository-builder:v2.0.0"
         with:
           args: "source.txt ${{ github.token }} repository.json"
-      - run: |
-          mkdir website
-          mv vpm.json website/index.json
       - uses: actions/configure-pages@v5.0.0
       - uses: actions/upload-pages-artifact@v3.0.1
         with:
